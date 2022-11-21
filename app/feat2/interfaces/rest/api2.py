@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends
-from feat2.domain.productservice import ProductService
-from feat2.interfaces.rest.dtos.request import ProductDto
+from dependency_injector.wiring import Provide, inject
 from starlette.responses import Response
+
+from config.container import Container
+from feat2.interfaces.rest.dtos.request import ProductDto
 
 # Feature Router Configuration
 router = APIRouter(
@@ -9,27 +11,42 @@ router = APIRouter(
     tags=["Product"],
     responses={
         200: {"description": "Successfull Response"},
-        404: {"description": "Not found"}
-    }
+        404: {"description": "Not found"},
+    },
 )
 
 # ENDPOINTS
 @router.get("/")
-def retrieveAll(service = Depends(ProductService)):
+@inject
+def retrieveAll(service=Depends(Provide[Container.product_service])):
     return service.retrieveAll()
 
+
 @router.get("/{id}")
-def retrieve(id: int, service = Depends(ProductService)) -> Response:
+@inject
+def retrieve(id: int, service=Depends(Provide[Container.product_service])) -> Response:
     return service.retrieve(id)
 
+
 @router.post("/")
-async def create(p: ProductDto, service = Depends(ProductService)) -> Response:    
+@inject
+async def create(
+    p: ProductDto, service=Depends(Provide[Container.product_service])
+) -> Response:
     return service.create(p)
 
+
 @router.put("/{id}")
-async def update(id: int, p: ProductDto, service = Depends(ProductService)) -> Response:
+@inject
+async def update(
+    id: int, p: ProductDto, service=Depends(Provide[Container.product_service])
+) -> Response:
     return service.update(p)
 
+
 @router.delete("/{id}")
-async def delete(id: int, service = Depends(ProductService)) -> Response:
+@inject
+async def delete(
+    id: int, service=Depends(Provide[Container.product_service])
+) -> Response:
     return service.delete(id)

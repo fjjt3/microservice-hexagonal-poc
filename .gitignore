@@ -1,0 +1,37 @@
+# Terraform
+.terraform
+terraform.log
+terraform.tfstate*
+terraform.tfplan
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+out.plan
+plan
+.terraform.lock.hcl
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+setup.py
+htmlcov/
+.test-reports/
+.coverage
+.coverage.*
+.pytest_cache/
+dist/
+*.egg-info/
+
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+.tmuxp.*
+
+# IDEs
+.venv
+.idea
+
+sonarcloud.py

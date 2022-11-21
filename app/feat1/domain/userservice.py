@@ -1,18 +1,17 @@
-from fastapi import Depends
 from feat1.domain.usermodel import UserDto
 from feat1.infrastucture.db.userdbrepository import UserDbRepository
 
-class UserService:
 
-    def __init__(self, repository=Depends(UserDbRepository)):
+class UserService:
+    def __init__(self, repository=UserDbRepository):
         self.repository = repository
 
-    def retrieve(self, id: int):    
+    def retrieve(self, id: int):
         return self.repository.retrieve(id)
 
     def retrieveAll(self):
         return self.repository.retrieveAll()
-    
+
     def create(self, user: UserDto):
         return self.repository.create(user)
 
