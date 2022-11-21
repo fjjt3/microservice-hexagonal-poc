@@ -4,8 +4,9 @@ import logging
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
-from feat1.interfaces.rest  import api1
+from feat1.interfaces.rest import api1
 from feat2.interfaces.rest import api2
+from config.container import Container
 from config.sennder_openapi_util import Contact, License
 
 # Api Routing Configuration
@@ -18,19 +19,26 @@ LOGGER = logging.getLogger(__name__)
 
 # Server Creation
 def createServer() -> FastAPI:
-    '''
-        Create Server 
-    '''
+    """
+    Create Server
+    """
     try:
         LOGGER.info("Initiliase fast-API app")
+        container = Container()
+        container.wire(packages=["feat1", "feat2"])
         server = FastAPI(
             title="Hexagonal Rest Microservice",
             description="REST API Microservice.",
             version="1.0.0",
-            terms_of_service= "http://example.com/terms/",
-            contact= Contact("API Support", "http://www.example.com/support","support@example.com").__dict__,
-            license_info= License("Apache 2.0", "https://www.apache.org/licenses/LICENSE-2.0.html").__dict__
+            terms_of_service="http://example.com/terms/",
+            contact=Contact(
+                "API Support", "http://www.example.com/support", "support@example.com"
+            ).__dict__,
+            license_info=License(
+                "Apache 2.0", "https://www.apache.org/licenses/LICENSE-2.0.html"
+            ).__dict__,
         )
+        server.container = container
         origins = ["http://localhost:8005"]
         server.add_middleware(
             CORSMiddleware,
@@ -43,7 +51,3 @@ def createServer() -> FastAPI:
     except Exception as e:
         LOGGER.error(f"Error in fast-API app initialisation => {e}")
     return server
-
-
-
-
